@@ -1,6 +1,64 @@
 ---
-title: "Analysis 1"
+title: "A Beuatiful Graphic"
 author: "Dhruva Arcot"
 format: html
+execute:
+  echo: false
+  message: false
 ---
 Dhruva Arcot is a data maestro!
+
+```{r}
+suppressPackageStartupMessages(library(tidyverse))
+```
+
+```{r}
+library(tidyverse)
+
+# Summarize average price by cut and color
+diamonds_summary <- diamonds %>%
+  group_by(cut, color) %>%
+  summarise(avg_price = mean(price), .groups = "drop")
+
+ggplot(diamonds_summary, aes(x = color, y = avg_price, fill = cut)) +
+  geom_col(position = position_dodge(width = 0.75), width = 0.65) +
+  scale_fill_manual(
+    values = c(
+      "Fair"      = "#b5c4b1",
+      "Good"      = "#7fa99b",
+      "Very Good" = "#4e8d8d",
+      "Premium"   = "#2c6e7e",
+      "Ideal"     = "#1a3d5c"
+    )
+  ) +
+  scale_y_continuous(
+    labels = scales::dollar_format(scale = 1e-3, suffix = "k"),
+    expand = expansion(mult = c(0, 0.05))
+  ) +
+  labs(
+    title    = "Diamond Prices by Color & Cut",
+    subtitle = "Average retail price across GIA color grades D–J",
+    x        = "Color Grade  (D = Colorless → J = Near-Colorless)",
+    y        = "Average Price",
+    fill     = "Cut Quality",
+    caption  = "Source: ggplot2 built-in `diamonds` dataset"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    plot.background    = element_rect(fill = "#0f1923", color = NA),
+    panel.background   = element_rect(fill = "#0f1923", color = NA),
+    panel.grid.major.y = element_line(color = "#ffffff18"),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor   = element_blank(),
+    axis.text          = element_text(color = "#c9d4dc"),
+    axis.title         = element_text(color = "#8fa8bf", size = 10),
+    plot.title         = element_text(color = "#e8f0f7", face = "bold", size = 16),
+    plot.subtitle      = element_text(color = "#8fa8bf", size = 11, margin = margin(b = 12)),
+    plot.caption       = element_text(color = "#4a6272", size = 8, hjust = 0),
+    legend.background  = element_rect(fill = "#0f1923", color = NA),
+    legend.key         = element_rect(fill = NA),
+    legend.text        = element_text(color = "#c9d4dc"),
+    legend.title       = element_text(color = "#8fa8bf", face = "bold"),
+    plot.margin        = margin(20, 24, 16, 20)
+  )
+```
